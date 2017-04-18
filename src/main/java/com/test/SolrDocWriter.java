@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -48,11 +50,12 @@ public class SolrDocWriter {
             client = SolrClientFactory.createZkClient(connectionDetails);
             HttpClientUtil.setConfigurer(new Krb5HttpClientConfigurer());
             SolrInputDocument doc;
+            Collection<SolrInputDocument> list = new ArrayList<>();
             for (int i = 0; i < numDocs; i++) {
                 doc = getSolrDoc(i);
-                client.add(doc);
+                list.add(doc);
             }
-
+            client.add(list);
             client.commit();
             logger.info("Committed batch");
         } finally {
